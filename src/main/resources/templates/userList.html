@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>User Management</title>
+</head>
+<body>
+    <h1>User Management</h1>
+
+    <h2>Create/Update User</h2>
+    <form th:action="@{/users/save}" th:object="${user}" method="post">
+        <label>ID:</label>
+        <input type="text" th:field="*{id}" id="id" /><br/>
+        <label>Full Name:</label>
+        <input type="text" th:field="*{fullname}" id="fullname" /><br/>
+        <label>Email:</label>
+        <input type="email" th:field="*{email}" id="email" /><br/>
+        <label>Password:</label>
+        <input type="password" th:field="*{password}" id="password" /><br/>
+        <label>Admin:</label>
+        <input type="checkbox" th:field="*{admin}" id="admin" /><br/>
+        <button type="submit">Save</button>
+    </form>
+
+    <h2>User List</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Full Name</th>
+                <th>Email</th>
+                <th>Admin</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="user : ${users}">
+                <td th:text="${user.id}"></td>
+                <td th:text="${user.fullname}"></td>
+                <td th:text="${user.email}"></td>
+                <td th:text="${user.admin}"></td>
+                <td>
+                    <button type="button" th:onclick="populateForm([[${user.id}]], [[${user.fullname}]], [[${user.email}]], [[${user.admin}]])">Edit</button>
+                    <form th:action="@{/users/delete/{id}(id=${user.id})}" th:method="delete" style="display:inline;">
+                        <button type="submit">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script>
+        function populateForm(id, fullname, email, admin) {
+            document.getElementById('id').value = id;
+            document.getElementById('fullname').value = fullname;
+            document.getElementById('email').value = email;
+            document.getElementById('admin').checked = admin;
+            document.getElementById('password').value = ''; // Clear password for security
+        }
+    </script>
+</body>
+</html>
